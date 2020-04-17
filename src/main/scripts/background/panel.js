@@ -126,7 +126,11 @@ var Panel = (function PanelClosure() {
         controller.next(panel.selectEvents);
       });
 
+      $('#partialReplay').click(function(eventObject) {
+        controller.partialReplay(panel.selectEvents);
+      });
       $('#clearcookie').click(function(eventObject) {
+        //console.log("loop")
         controller.clearCookie(panel.selectEvents);
       });
 

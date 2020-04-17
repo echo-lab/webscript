@@ -98,9 +98,11 @@ function incrementMatchedEventIndex() {
   simulatedEventsIdx++;
 }
 
+
 /* Create an event record given the data from the event handler */
 function recordEvent(eventData) {
   /* check if we are stopped, then just return */
+
   if (recording == RecordState.STOPPED)
     return true;
 
@@ -498,7 +500,10 @@ function simulate(events, startIndex) {
       oEvent.initEvent(eventName, options.bubbles, options.cancelable);
     } else if (eventType == 'FocusEvent') {
       oEvent.initUIEvent(eventName, options.bubbles, options.cancelable,
-          document.defaultView, options.detail);
+      document.defaultView, options.detail);
+      // console.log("Hello")
+      // replayLog.error("Focus or Blur Event. Replay stopped.")
+      // return;
 
       if (eventRecord.relatedTarget) {
         var relatedTarget = getTarget(eventRecord.relatedTarget);

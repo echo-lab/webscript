@@ -43,6 +43,11 @@ Record.prototype.addNextLoop = function _addNextLoop(eventIds) {
   this.addGeneralLoop('next', eventIds);
 }
 
+Record.prototype.addPartialReplayLoop = function _addPartialReplayLoop(eventIds) {
+  this.addGeneralLoop('partialReplay', eventIds);
+}
+
+
 Controller.prototype.loop = function _loop(selectedEvents) {
   record.addLoop(selectedEvents);
 };
@@ -50,6 +55,12 @@ Controller.prototype.loop = function _loop(selectedEvents) {
 Controller.prototype.next = function _next(selectedEvents) {
   record.addNextLoop(selectedEvents);
 };
+
+Controller.prototype.partialReplay = function _next(selectedEvents) {
+  record.addPartialReplayLoop(selectedEvents);
+};
+
+
 
 Replay.prototype.addonReset.push(function() {
   this.loopPrefix = [];

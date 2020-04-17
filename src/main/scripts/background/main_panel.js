@@ -215,14 +215,15 @@ var Record = (function RecordClosure() {
      */
     startRecording: function _startRecording(replaying) {
       recordLog.log('Starting record');
+      document.getElementById('recordIndicator').style.fill = "#FF0000";
       var s = replaying ? RecordState.REPLAYING : RecordState.RECORDING;
       this.updateStatus(s);
-
       /* Tell the content scripts to begin recording */
       this.ports.sendToAll({type: 'recording', value: this.getStatus()});
     },
     stopRecording: function _stopRecording() {
       recordLog.log('Stopping record');
+      document.getElementById('recordIndicator').style.fill = "#eeeeee";
       this.updateStatus(RecordState.STOPPED);
 
       /* Tell the content scripts to stop recording */
@@ -973,6 +974,19 @@ var Replay = (function ReplayClosure() {
         this.setNextTimeout(0);
         return;
       }
+
+
+
+      //stop replaying if event is focus or blur
+      // if (e.data.type == "focus"){
+      //   window.alert("Focus event");
+      //   return;
+      // }
+      // else if (e.data.type == "blur"){
+      //   window.alert("Blur event");
+      //   return;
+      // }
+
       replayLog.debug('Replaying event:', type, e);
 
       replayFunction.call(this, e);
@@ -1275,6 +1289,9 @@ var Controller = (function ControllerClosure() {
     },
     next: function(eventIds) {
       this.record.addNextLoop(eventIds);
+    },
+    partialReplay: function(eventIds){
+      this.record.addPartialReplayLoop(eventIds);
     },
     saveScript: function(name) {
       chrome.storage.local.set({scriptName: name});
