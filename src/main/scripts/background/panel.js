@@ -46,7 +46,7 @@ var Panel = (function PanelClosure() {
           this.addEvent(value.event, value.index);
           break;
         case 'status':
-          this.addMessage('Status: ' + value);
+          this.addMessage('Status: ' + value, "color","red");
           break;
         case 'reset':
           this.clearEvents();
@@ -113,6 +113,8 @@ var Panel = (function PanelClosure() {
       $('#resend').click(function(eventObject) {
         controller.resend();
       });
+	  
+      
 
       $('#replayOne').click(function(eventObject) {
         controller.replayOne();
@@ -274,15 +276,19 @@ var Panel = (function PanelClosure() {
       $('.event').removeClass('selected');
       $('.event').filter(function(index) {
         return selectEvents.indexOf(this.id) >= 0;
-      }).addClass('selected');
-    },
+	}).addClass('selected');
+},
+
+
+
     addEvent: function _addEvent(eventInfo, index) {
       var events = this.events;
       if (typeof index != 'number')
         index = events.length;
 
-      events.splice(index, 0, eventInfo);
-
+      events.splice(index, 0, eventInfo); //insert eventInfor at index(event.length)
+	  //events.splice(index, 0, eventInfo);
+	  //var id2 = eventInfo.meta.id - 1;
       var id = eventInfo.meta.id;
       var type = eventInfo.type;
 
@@ -291,13 +297,20 @@ var Panel = (function PanelClosure() {
         return;
 
       var eventDiv = $('<div/>', {class: 'event wordwrap', id: id});
-
-      if (index + 1 < events.length) {
-        var postEventId = events[index + 1].meta.id;
-        $('#'+ postEventId).before(eventDiv);
-      } else {
-        $('#events').append(eventDiv);
-      }
+	  
+	  //if (document.getElementById("switch").clicked == true){
+		  if (index + 1 < events.length) {
+			  var postEventId = events[index + 1].meta.id
+			  $('#'+ postEventId).before(eventDiv);//all elements with post iD
+		  } 
+		  else {
+			  if (document.getElementById("switch").clicked == true){
+				  $('#events').append(eventDiv);
+			  }
+			  else {
+			  	$('#events').prepend(eventDiv);
+			  }
+		  }
  
       var panel = this;
       // do this in a timeout so it doesn't block the main thread
@@ -381,9 +394,11 @@ var Panel = (function PanelClosure() {
         }
       }, 0);
     },
-    addMessage: function _addMessage(message) {
+    addMessage: function _addMessage(message, cssprop, value) {
       var newDiv = $('<div/>', {class: 'message wordwrap'});
       newDiv.text(message);
+	  if(cssprop !=undefined)
+		  newDiv.css(cssprop, value);
       $('#messages').prepend(newDiv);
     },
     clearMessages: function _clearMessages() {
@@ -421,6 +436,7 @@ var Panel = (function PanelClosure() {
 
   return Panel;
 })();
+
 
 var panel = new Panel(controller);
 user.setPanel(panel);

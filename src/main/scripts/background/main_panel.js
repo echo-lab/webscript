@@ -186,10 +186,14 @@ var Record = (function RecordClosure() {
       this.events = [];
       /* the time the last event was recorded */
       this.lastTime = 0;
-
+	  this.updateListeners({type: 'clearMessages'});
       this.updateListeners({type: 'reset', value: null});
+	  
       this.ports.sendToAll({type: 'reset', value: null});
+	  this.ports.sendToAll({type: 'clearMessages'});
     },
+	
+	
     /* Messages should be in the form {type:..., value:...} */
     addListener: function _addListener(callback) {
       this.listeners.push(callback);
@@ -208,6 +212,11 @@ var Record = (function RecordClosure() {
       this.updateListeners({type: 'status', value: 'record:' + newStatus});
       this.ports.sendToAll({type: 'recording', value: newStatus});
     },
+	
+	
+	
+
+	
     /* Begin recording events.
      *
      * @param {boolean} replaying Whether we are recording a user's
@@ -217,15 +226,25 @@ var Record = (function RecordClosure() {
       recordLog.log('Starting record');
       document.getElementById('recordIndicator').style.fill = "#FF0000";
       var s = replaying ? RecordState.REPLAYING : RecordState.RECORDING;
+	  document.getElementById('messages').style = "color:blue";
+	  
       this.updateStatus(s);
+	  
       /* Tell the content scripts to begin recording */
       this.ports.sendToAll({type: 'recording', value: this.getStatus()});
+	  
+	  //var objDiv = documents.getElementById("events");
+	  //objDiv.scrollTop = objdiv.scrollHeight;
+	   //$("events").animate({ scrollTop: $('events').prop("scrollHeight")}, 0);
     },
     stopRecording: function _stopRecording() {
+		
       recordLog.log('Stopping record');
+	  //document.getElementById('messages').innerHTML("Status: record:stopped").style = "color:red";
       document.getElementById('recordIndicator').style.fill = "#eeeeee";
+	
       this.updateStatus(RecordState.STOPPED);
-
+	  
       /* Tell the content scripts to stop recording */
       this.ports.sendToAll({type: 'stop', value: null});
       this.ports.sendToAll({type: 'recording', value: this.getStatus()});
@@ -421,6 +440,7 @@ var Replay = (function ReplayClosure() {
        * is the handle to the current callback */
       this.callbackHandle = null;
       this.replayState = this.updateStatus(ReplayState.STOPPED);
+	  
       /* record the first execution attempt of the first event */
       this.timeoutInfo = {startTime: 0, index: -1};
       this.triggerTimeoutInfo = {startTime: 0, index: -1};
@@ -442,6 +462,7 @@ var Replay = (function ReplayClosure() {
       this.startTime = 0;
       this.triggerTimeouts = 0;
       this.elementTimeouts = 0;
+	  //document.getElementById('messages').style = "color:red";
 
       /* Call the resets for the addons */
       var addonReset = this.addonReset;
@@ -456,13 +477,18 @@ var Replay = (function ReplayClosure() {
     },
     updateListeners: function _updateListeners(msg) {
       var listeners = this.listeners;
+	  //listeners.style = "color:red";
       for (var i = 0, ii = listeners.length; i < ii; ++i) {
         listeners[i](msg);
       }
+	  
     },
     updateStatus: function _updateStatus(newStatus) {
+	//document.getElementByTagName("Status: replay:replaying").style = "color:red";
+	  //document.getElementById('messages').style = "color:red";
       this.replayState = newStatus;
       this.updateListeners({type: 'status', value: 'replay:' + newStatus});
+	  //document.getElementById('messages').style = "color:red";
     },
     /* Begin replaying a list of events.
      *
@@ -471,9 +497,12 @@ var Replay = (function ReplayClosure() {
      * @param {function} cont Callback thats executed after replay is finished
      */
     replay: function _replay(events, config, cont) {
-      replayLog.log('Starting replay');
-
-      /* Pause and reset and previous executions */
+		//var title = $(<div style="width:500px;height:100px;border:1px solid #000;">This is a rectangle!</div>);
+		// ('#events').append(title);
+		
+		replayLog.log('Starting replay');
+		
+		/* Pause and reset and previous executions */
       this.pause();
       this.reset();
 
@@ -484,6 +513,7 @@ var Replay = (function ReplayClosure() {
       for (var i = 0, ii = events.length; i < ii; ++i)
         this.resetEvent(events[i]);
 
+	  
       if (config) {
         if (config.scriptId)
           this.scriptId = config.scriptId;
@@ -1290,9 +1320,15 @@ var Controller = (function ControllerClosure() {
     next: function(eventIds) {
       this.record.addNextLoop(eventIds);
     },
+	
     partialReplay: function(eventIds){
       this.record.addPartialReplayLoop(eventIds);
     },
+	
+	
+	
+	
+	
     saveScript: function(name) {
       chrome.storage.local.set({scriptName: name});
       ctlLog.log('Saving script');
