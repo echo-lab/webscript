@@ -766,8 +766,19 @@ var handlers = {
   'url': function() {
     port.postMessage({type: 'url', value: document.URL, state: recording});
   },
-  'promptResponse': promptResponse
+  'promptResponse': promptResponse,
+  'ruipu': function() {
+	  alert("I hear you!");
+	 // document.body.innerHTML +='<div class="Remo-notification" style="border-radius: 5px;width: 300px;top: 5px;right: 5px;opacity: 100;background-color: #ccc;z-index: 100000;position: absolute;padding: 10px;text-decoration: none;font-family: sans-serif;font-size: medium;text-align: center;"> <div class="lw-title">Remo Available</div><div id = "lw-button-wrapper" class ="lw_buttons"><button class="lw_button_enable" style="'+button_style+'background-color:#33ff77">Enable</button><button class="lw_button_nope" style="'+button_style+'">Stop</button><div style="text-align:left; font-size:10px;"></div></div>';
+	  
+  }
 };
+
+
+var button_style = "padding: 4px 7px;text-align: center;text-decoration: none;display: inline-block;border: 2px solid;border-radius: 5px;font-size: 16px;margin: 4px 2px;cursor: pointer;"
+
+document.getElementsByTagName("body").innerHTML +='<div class="Remo-notification" style="border-radius: 5px;width: 300px;top: 5px;right: 5px;opacity: 100;background-color: #ccc;z-index: 100000;position: absolute;padding: 10px;text-decoration: none;font-family: sans-serif;font-size: medium;text-align: center;"> <div class="lw-title">Remo Available</div><div id = "lw-button-wrapper" class ="lw_buttons"><button class="lw_button_enable" style="'+button_style+'background-color:#33ff77">Enable</button><button class="lw_button_nope" style="'+button_style+'">Stop</button><div style="text-align:left; font-size:10px;"></div></div>';
+
 
 /* Handle messages coming from the background page */
 function handleMessage(request) {

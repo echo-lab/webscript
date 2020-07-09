@@ -5,12 +5,21 @@
   "description": "A record and replay tool for even the most complicated websites.",
   "browser_action": {
     "default_title": "Ringer",
-    "default_icon": "icons/16-full-color.png"
+    "default_icon": "icons/16-full-color.png",
+	"default_popup": "main/pages/popup.html"
   },
   "background": {
     "page": "main/pages/background.html"
   },
+  
   "web_accessible_resources": [
+	"main/css/inner_web.css",
+	"main/pages/toolbar.html",
+	"main/pages/popup.html",
+	"lib/jquery-1.7.2.js",
+	"main/scripts/background/popup.js",
+	"main/scripts/content/inner_web.js",
+	
     "main/scripts/content/injected.js",
     "main/scripts/common/params.js",
     "main/scripts/common/logging.js",
@@ -19,8 +28,10 @@
   ],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["lib/jquery-1.7.2.js",
+	  "matches": ["http://*/*", "https://*/*"],
+	  "css":["main/css/inner_web.css"],
+      "js": [
+		  "lib/jquery-1.7.2.js",
              "lib/underscore.js",
              "lib/outline/jquery.dom-outline-1.0.js",
              "main/scripts/common/scope.js",
@@ -38,10 +49,6 @@
              "addon/copypaste/content_script_copypaste.js"
       ],
       "run_at": "document_start",
-      // Bug with Chrome extensions doesn't allow extension code to access
-      // frames within a page. Instead we need to load the content script
-      // into each page.
-      // http://code.google.com/p/chromium/issues/detail?id=20773 
       "all_frames": true
     }
   ],
@@ -54,8 +61,8 @@
     "128": "icons/128-full-color.png"
   },
   "permissions": [
-    "tabs", // used to communicate
-    "webNavigation", // used to listen to load events
+    "tabs", 
+    "webNavigation", 
     "webRequest",
     "webRequestBlocking",
     "storage",

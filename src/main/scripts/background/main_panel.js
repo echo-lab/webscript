@@ -241,7 +241,7 @@ var Record = (function RecordClosure() {
 		
       recordLog.log('Stopping record');
 	  //document.getElementById('messages').innerHTML("Status: record:stopped").style = "color:red";
-      document.getElementById('recordIndicator').style.fill = "#eeeeee";
+      //document.getElementById('recordIndicator').style.fill = "#eeeeee";
 	
       this.updateStatus(RecordState.STOPPED);
 	  

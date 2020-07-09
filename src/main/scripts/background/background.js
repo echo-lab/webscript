@@ -7,7 +7,7 @@
  * interacts with. */
 (function() {
 
-  var defaultWidth = 900;
+  var defaultWidth = 400;
   var defaultHeight = 400;
 
   var panelWindow = undefined;
